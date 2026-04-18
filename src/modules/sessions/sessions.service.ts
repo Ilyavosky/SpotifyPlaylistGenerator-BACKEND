@@ -35,8 +35,9 @@ export async function createSession(input: CreateSessionInput): Promise<Session>
 
     await client.query('COMMIT');
     return session;
-  } catch {
+  } catch (err) {
     await client.query('ROLLBACK');
+    console.error('Session error:', err);
     throw new AppError('DB_SESSION_ERROR', 'Error al crear la sesión', 500);
   } finally {
     client.release();
@@ -49,7 +50,8 @@ export async function getSessions(): Promise<Session[]> {
       'SELECT * FROM generation_sessions ORDER BY created_at DESC'
     );
     return result.rows as Session[];
-  } catch {
+  } catch (err) {
+    console.error('getSessions error:', err);
     throw new AppError('DB_SESSION_ERROR', 'Error al obtener sesiones', 500);
   }
 }
@@ -68,6 +70,7 @@ export async function getSessionById(id: number): Promise<Session> {
     return result.rows[0] as Session;
   } catch (err) {
     if (err instanceof AppError) throw err;
+    console.error('getSessionById error:', err);
     throw new AppError('DB_SESSION_ERROR', 'Error al obtener la sesión', 500);
   }
 }
@@ -87,6 +90,7 @@ export async function markSessionAsExported(id: number): Promise<Session> {
     return result.rows[0] as Session;
   } catch (err) {
     if (err instanceof AppError) throw err;
+    console.error('markSessionAsExported error:', err);
     throw new AppError('DB_SESSION_ERROR', 'Error al actualizar la sesión', 500);
   }
 }
