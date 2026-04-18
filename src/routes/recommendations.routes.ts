@@ -1,10 +1,8 @@
 import { Router } from 'express';
-import authRoutes from './auth.routes';
-import genresRoutes from './genres.routes';
+import * as recommendationsController from '../modules/recommendations/recommendations.controller';
 
 const router = Router();
 
-router.use('/auth', authRoutes);
-router.use('/genres', genresRoutes);
+router.post('/', recommendationsController.getRecommendations);
 
 export default router;
