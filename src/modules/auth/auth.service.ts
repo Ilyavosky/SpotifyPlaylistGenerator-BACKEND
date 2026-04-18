@@ -20,7 +20,7 @@ const SCOPES = [
 export function generateAuthUrl(): { url: string; state: string } {
   const state = crypto.randomBytes(16).toString('hex');
 
-  const params: Record<string, string> = {
+  const params: Record<string, string> = { //Permisos que le pedimos al usuario de Spotify. Necesario para que la API de Spotify sepa que puede hacer con la cuenta del usuario.
   client_id: CLIENT_ID,
   response_type: 'code',
   redirect_uri: REDIRECT_URI,
