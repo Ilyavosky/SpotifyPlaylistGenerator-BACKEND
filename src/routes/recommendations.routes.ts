@@ -1,12 +1,10 @@
 import { Router } from 'express';
 import authRoutes from './auth.routes';
 import genresRoutes from './genres.routes';
-import recommendationsRoutes from './recommendations.routes';
 
 const router = Router();
 
 router.use('/auth', authRoutes);
 router.use('/genres', genresRoutes);
-router.use('/recommendations', recommendationsRoutes);
 
 export default router;
