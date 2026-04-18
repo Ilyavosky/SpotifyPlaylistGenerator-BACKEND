@@ -1,9 +1,6 @@
-import axios from 'axios';
 import { db } from '../../lib/db/client';
 import { AppError } from '../../lib/errors/AppError';
-import { SpotifyGenresResponse, Genre } from './genres.types';
-
-const SPOTIFY_GENRES_URL = 'https://api.spotify.com/v1/recommendations/available-genre-seeds';
+import { Genre } from './genres.types';
 
 export async function getGenresFromSpotify(_accessToken: string): Promise<string[]> {
   return [
