@@ -115,8 +115,9 @@ export async function saveTracksToSession(
 
     await client.query('COMMIT');
     return saved;
-  } catch {
+  } catch (err) {
     await client.query('ROLLBACK');
+    console.error('saveTracksToSession error:', err);
     throw new AppError('DB_TRACKS_ERROR', 'Error al guardar tracks en la base de datos', 500);
   } finally {
     client.release();
