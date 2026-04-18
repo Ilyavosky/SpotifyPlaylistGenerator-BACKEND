@@ -5,6 +5,12 @@ import { RecommendationParams, SpotifyRecommendationsResponse, SpotifyTrack, Sav
 
 const SPOTIFY_SEARCH_URL = 'https://api.spotify.com/v1/search';
 
+function normalizeDate(date: string): string {
+  if (date.length === 4) return `${date}-01-01`;
+  if (date.length === 7) return `${date}-01`;
+  return date;
+}
+
 export async function fetchRecommendations(
   accessToken: string,
   params: RecommendationParams
@@ -45,7 +51,7 @@ export async function saveTracksToSession(
         `INSERT INTO albums (spotify_id, name, release_date, cover_url)
          VALUES ($1, $2, $3, $4)
          ON CONFLICT (spotify_id) DO NOTHING`,
-        [album.id, album.name, album.release_date, album.images[0]?.url ?? null]
+        [album.id, album.name, normalizeDate(album.release_date), album.images[0]?.url ?? null]
       );
 
       const albumRow = await client.query(
