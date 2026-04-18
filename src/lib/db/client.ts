@@ -8,7 +8,9 @@ const pool = new Pool({
   connectionTimeoutMillis: 3000,
 });
 
-pool.on('error', () => {});
+pool.on('error', (err) => {
+  console.error('DB Pool error:', err.message);
+});
 
 export const db = {
   query: (text: string, params?: unknown[]) => pool.query(text, params),

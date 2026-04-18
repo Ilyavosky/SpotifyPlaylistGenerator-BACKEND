@@ -3,26 +3,26 @@ import { db } from '../../lib/db/client';
 import { AppError } from '../../lib/errors/AppError';
 import { RecommendationParams, SpotifyRecommendationsResponse, SpotifyTrack, SavedTrack } from './recommendations.types';
 
-const SPOTIFY_RECOMMENDATIONS_URL = 'https://api.spotify.com/v1/recommendations';
+const SPOTIFY_SEARCH_URL = 'https://api.spotify.com/v1/search';
 
 export async function fetchRecommendations(
   accessToken: string,
   params: RecommendationParams
 ): Promise<SpotifyTrack[]> {
   try {
-    const { data } = await axios.get<SpotifyRecommendationsResponse>(SPOTIFY_RECOMMENDATIONS_URL, {
+    const query = params.seed_genres.map(g => `genre:${g}`).join(' OR ');
+    const { data } = await axios.get<SpotifyRecommendationsResponse>(SPOTIFY_SEARCH_URL, {
       headers: { Authorization: `Bearer ${accessToken}` },
       params: {
-        target_valence: params.target_valence,
-        target_energy: params.target_energy,
-        target_danceability: params.target_danceability,
-        seed_genres: params.seed_genres.join(','),
+        q: query,
+        type: 'track',
         limit: 20,
+        market: 'MX',
       },
     });
-    return data.tracks;
+    return data.tracks.items;
   } catch {
-    throw new AppError('SPOTIFY_RECOMMENDATIONS_ERROR', 'Error al obtener recomendaciones de Spotify', 502);
+    throw new AppError('SPOTIFY_SEARCH_ERROR', 'Error al buscar tracks en Spotify', 502);
   }
 }
 

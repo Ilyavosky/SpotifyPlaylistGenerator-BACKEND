@@ -19,12 +19,13 @@ export interface SpotifyTrack {
   artists: {
     id: string;
     name: string;
-    images?: { url: string }[];
   }[];
 }
 
 export interface SpotifyRecommendationsResponse {
-  tracks: SpotifyTrack[];
+  tracks: {
+    items: SpotifyTrack[];
+  };
 }
 
 export interface SavedTrack {
