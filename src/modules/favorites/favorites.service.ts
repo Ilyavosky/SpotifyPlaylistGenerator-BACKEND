@@ -8,11 +8,15 @@ export async function updateTrackStatus(
   status: 'accepted' | 'rejected'
 ): Promise<void> {
   try {
+    console.log('updateTrackStatus:', { sessionId, trackId, status, types: { sessionId: typeof sessionId, trackId: typeof trackId } });
+    
     const result = await db.query(
       `UPDATE session_tracks SET status = $1, updated_at = NOW()
        WHERE session_id = $2 AND track_id = $3`,
       [status, sessionId, trackId]
     );
+
+    console.log('rowCount:', result.rowCount);
 
     if (result.rowCount === 0) {
       throw new AppError('TRACK_NOT_FOUND', 'Track no encontrado en la sesión', 404, { sessionId, trackId });
