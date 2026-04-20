@@ -16,6 +16,8 @@ export function errorHandler(
     return;
   }
 
+  console.error('Unhandled error:', err);
+
   res.status(500).json({
     code: 'INTERNAL_ERROR',
     message: 'Unexpected error',
