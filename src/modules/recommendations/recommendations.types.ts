@@ -37,4 +37,7 @@ export interface SavedTrack {
   valence: number;
   energy: number;
   danceability: number;
+  artist_name: string | null;
+  album_name: string | null;
+  cover_url: string | null;
 }

@@ -116,6 +116,9 @@ export async function saveTracksToSession(
         valence: params.target_valence,
         energy: params.target_energy,
         danceability: params.target_danceability,
+        artist_name: track.artists[0]?.name ?? null,
+        album_name: album.name ?? null,
+        cover_url: album.images[0]?.url ?? null,
       });
     }
 
