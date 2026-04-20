@@ -4,8 +4,8 @@ import { callbackQuerySchema } from './auth.schema';
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: false,
-  sameSite: 'lax' as const,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: process.env.NODE_ENV === 'production' ? 'none' as const : 'lax' as const,
   maxAge: 60 * 60 * 1000,
 };
 
