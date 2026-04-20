@@ -16,17 +16,23 @@ export async function fetchRecommendations(
   params: RecommendationParams
 ): Promise<SpotifyTrack[]> {
   try {
-    const query = params.seed_genres.map(g => `genre:${g}`).join(' OR ');
-    const { data } = await axios.get<SpotifyRecommendationsResponse>(SPOTIFY_SEARCH_URL, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-      params: {
-        q: query,
-        type: 'track',
-        limit: 20,
-        market: 'MX',
-      },
-    });
-    return data.tracks.items;
+    const tracksPerGenre = Math.ceil(20 / params.seed_genres.length);
+    const results: SpotifyTrack[] = [];
+
+    for (const genre of params.seed_genres) {
+      const { data } = await axios.get<SpotifyRecommendationsResponse>(SPOTIFY_SEARCH_URL, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        params: {
+          q: `genre:${genre}`,
+          type: 'track',
+          limit: tracksPerGenre,
+          market: 'MX',
+        },
+      });
+      results.push(...data.tracks.items);
+    }
+
+    return results.slice(0, 20);
   } catch {
     throw new AppError('SPOTIFY_SEARCH_ERROR', 'Error al buscar tracks en Spotify', 502);
   }
