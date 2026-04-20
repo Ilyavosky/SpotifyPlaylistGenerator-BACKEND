@@ -4,7 +4,7 @@ import { refreshAccessToken } from '../modules/auth/auth.service';
 const COOKIE_OPTIONS = {
   httpOnly: true,
   secure: false,
-  sameSite: 'none' as const,
+  sameSite: 'lax' as const,
   maxAge: 60 * 60 * 1000,
 };
 

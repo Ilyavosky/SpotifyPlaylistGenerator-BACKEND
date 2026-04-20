@@ -5,7 +5,7 @@ import { callbackQuerySchema } from './auth.schema';
 const COOKIE_OPTIONS = {
   httpOnly: true,
   secure: false,
-  sameSite: 'none' as const,
+  sameSite: 'lax' as const,
   maxAge: 60 * 60 * 1000,
 };
 
@@ -77,4 +77,13 @@ export async function logout(_req: Request, res: Response, next: NextFunction): 
   } catch (err) {
     next(err);
   }
+}
+
+export function me(req: Request, res: Response): void {
+  const token = req.cookies?.access_token;
+  if (!token) {
+    res.status(401).json({ code: 'UNAUTHORIZED', message: 'No token', details: {} });
+    return;
+  }
+  res.json({ access_token: token });
 }

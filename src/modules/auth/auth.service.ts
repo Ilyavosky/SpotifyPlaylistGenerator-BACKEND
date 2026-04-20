@@ -1,14 +1,10 @@
 import axios from 'axios';
 import crypto from 'crypto';
-import { SpotifyTokenResponse} from './auth.types';
+import { SpotifyTokenResponse } from './auth.types';
 import { AppError } from '../../lib/errors/AppError';
 
 const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/authorize';
 const SPOTIFY_TOKEN_URL = 'https://accounts.spotify.com/api/token';
-
-const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID!;
-const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET!;
-const REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI!;
 
 const SCOPES = [
   'playlist-modify-public',
@@ -18,21 +14,27 @@ const SCOPES = [
 ].join(' ');
 
 export function generateAuthUrl(): { url: string; state: string } {
+  const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID!;
+  const REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI!;
+
   const state = crypto.randomBytes(16).toString('hex');
 
-  const params: Record<string, string> = { //Permisos que le pedimos al usuario de Spotify. Necesario para que la API de Spotify sepa que puede hacer con la cuenta del usuario.
-  client_id: CLIENT_ID,
-  response_type: 'code',
-  redirect_uri: REDIRECT_URI,
-  state,
-  scope: SCOPES,
-};
+  const params: Record<string, string> = {
+    client_id: CLIENT_ID,
+    response_type: 'code',
+    redirect_uri: REDIRECT_URI,
+    state,
+    scope: SCOPES,
+  };
 
   const url = `${SPOTIFY_AUTH_URL}?${new URLSearchParams(params).toString()}`;
   return { url, state };
 }
 
 export async function exchangeCode(code: string): Promise<SpotifyTokenResponse> {
+  const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID!;
+  const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET!;
+  const REDIRECT_URI = process.env.SPOTIFY_REDIRECT_URI!;
   const credentials = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64');
 
   try {
@@ -57,6 +59,8 @@ export async function exchangeCode(code: string): Promise<SpotifyTokenResponse> 
 }
 
 export async function refreshAccessToken(refreshToken: string): Promise<SpotifyTokenResponse> {
+  const CLIENT_ID = process.env.SPOTIFY_CLIENT_ID!;
+  const CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET!;
   const credentials = Buffer.from(`${CLIENT_ID}:${CLIENT_SECRET}`).toString('base64');
 
   try {
