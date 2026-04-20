@@ -2,10 +2,10 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { rateLimit } from 'express-rate-limit';
 import helmet from 'helmet';
 import router from './routes/index';
 import { errorHandler } from './middleware/errorHandler.middleware';
+import { authRefresh } from './middleware/authRefresh.middleware';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -21,6 +21,7 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
+app.use(authRefresh);
 
 app.use('/api/v1', router);
 app.use(errorHandler);
